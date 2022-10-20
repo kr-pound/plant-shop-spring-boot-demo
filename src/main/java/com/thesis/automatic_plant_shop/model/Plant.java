@@ -13,15 +13,18 @@ public class Plant {
     private String category;
     @Positive
     private double price;
+    private String image;
 
     public Plant(@JsonProperty("id") UUID id,
                  @JsonProperty("name") String name,
                  @JsonProperty("category") String category,
-                 @JsonProperty("price") double price) {
+                 @JsonProperty("price") double price,
+                 @JsonProperty("image") String image) {
         this.id = id;
         this.name = name;
         this.category = category;
         this.price = price;
+        this.image = image;
     }
 
     public UUID getId() {
@@ -54,5 +57,13 @@ public class Plant {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

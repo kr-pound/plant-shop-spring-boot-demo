@@ -23,7 +23,7 @@ public class PlantController {
 
     /**
      * Add a new Plant
-     * @param plant: Json Model (id, name, category, price)
+     * @param plant: Json Model (id, name, category, price, image)
      * @return int
      *      1 = success
      */
@@ -37,7 +37,7 @@ public class PlantController {
     /**
      * update a specific plant
      * path --> @param id: UUID of the plant
-     * @param plant: json Model (id, name, category, price)
+     * @param plant: json Model (id, name, category, price, image)
      * @return int
      *      1 = success
      *      -1 = failed
@@ -52,6 +52,7 @@ public class PlantController {
             _plant.setName(plant.getName());
             _plant.setCategory(plant.getCategory());
             _plant.setPrice(plant.getPrice());
+            _plant.setImage(plant.getImage());
             return plantService.updatePlant(_plant);
         } else
             return -1;
@@ -71,7 +72,7 @@ public class PlantController {
     /**
      * Get plant by giving an id
      * @param id: UUID
-     * @return plant: Json Model (id, name, category, price)
+     * @return plant: Json Model (id, name, category, price, image)
      */
     @GetMapping(path = "{id}")
     public Plant getPlantById(@PathVariable("id") UUID id) {
