@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/plant")
+@CrossOrigin(origins = "http://localhost:8080")
 public class PlantController {
 
     private final PlantService plantService;
