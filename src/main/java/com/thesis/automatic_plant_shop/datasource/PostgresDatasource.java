@@ -20,13 +20,4 @@ public class PostgresDatasource {
                 .build();
     }
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurerAdapter() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("api/v1/plant").allowedOrigins("http://localhost:5432");
-            }
-        };
-    }
 }
