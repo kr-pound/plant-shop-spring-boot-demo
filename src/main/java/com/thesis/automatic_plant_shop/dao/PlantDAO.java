@@ -21,4 +21,7 @@ public interface PlantDAO {
     // find plant
     List<Plant> findAll();
     Optional<Plant> findById(UUID id);
+
+    // delete plant
+    int deleteAll();
 }

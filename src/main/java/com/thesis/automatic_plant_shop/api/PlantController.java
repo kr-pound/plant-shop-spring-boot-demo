@@ -79,4 +79,17 @@ public class PlantController {
     public Plant getPlantById(@PathVariable("id") UUID id) {
         return plantService.getPlantById(id).orElse(null);
     }
+
+    /* ================================================================= */
+
+    /**
+     * Delete all plants
+     * @return int
+     *      0 = there are no item to delete
+     *      4 = deleted success
+     */
+    @DeleteMapping
+    public int deleteAllPlant() {
+        return plantService.deleteAllPlant();
+    }
 }

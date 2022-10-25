@@ -69,4 +69,11 @@ public class PlantDataAcessService implements PlantDAO {
                 });
         return Optional.ofNullable(plant);
     }
+
+    /* ================================================================= */
+
+    @Override
+    public int deleteAll() {
+        return jdbcTemplate.update("DELETE from plant");
+    }
 }

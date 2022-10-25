@@ -38,4 +38,10 @@ public class PlantService {
     public Optional<Plant> getPlantById(UUID id) {
         return plantDAO.findById(id);
     }
+
+    /* ================================================================= */
+
+    public int deleteAllPlant() {
+        return plantDAO.deleteAll();
+    }
 }
