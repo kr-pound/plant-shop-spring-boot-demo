@@ -35,8 +35,8 @@ public class PlantService {
     public List<Plant> getAllPlant() {
         return plantDAO.findAll();
     }
-    public Optional<Plant> getPlantById(UUID id) {
-        return plantDAO.findById(id);
+    public Optional<Plant> getPlantById(UUID plant_id) {
+        return plantDAO.findById(plant_id);
     }
 
     /* ================================================================= */

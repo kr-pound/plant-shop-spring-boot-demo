@@ -9,10 +9,10 @@ import java.util.UUID;
 public interface PlantDAO {
 
     // add plant
-    int save(UUID id, Plant plant);
+    int save(UUID plant_id, Plant plant);
     default int save(Plant plant) {
-        UUID id = UUID.randomUUID();
-        return save(id, plant);
+        UUID plant_id = UUID.randomUUID();
+        return save(plant_id, plant);
     }
 
     // update plant
@@ -20,7 +20,7 @@ public interface PlantDAO {
 
     // find plant
     List<Plant> findAll();
-    Optional<Plant> findById(UUID id);
+    Optional<Plant> findById(UUID plant_id);
 
     // delete plant
     int deleteAll();

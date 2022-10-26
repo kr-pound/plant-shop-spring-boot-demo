@@ -20,10 +20,10 @@ public class PlantDataAcessService implements PlantDAO {
     }
 
     @Override
-    public int save(UUID id, Plant plant) {
+    public int save(UUID plant_id, Plant plant) {
         return jdbcTemplate.update(
-                "INSERT INTO plant (id, name, category, price, image) VALUES(?,?,?,?,?)",
-                id, plant.getName(), plant.getCategory(), plant.getPrice(), plant.getImage());
+                "INSERT INTO plant (plant_id, name, category, description, price) VALUES(?,?,?,?,?)",
+                plant_id, plant.getName(), plant.getCategory(), plant.getDescription(), plant.getPrice());
     }
 
     /* ================================================================= */
@@ -31,8 +31,8 @@ public class PlantDataAcessService implements PlantDAO {
     @Override
     public int update(Plant plant) {
         return jdbcTemplate.update(
-                "UPDATE plant SET name=?, category=?, price=?, image=? WHERE id=?",
-                plant.getName(), plant.getCategory(), plant.getPrice(), plant.getImage(), plant.getId()
+                "UPDATE plant SET name=?, category=?, description=?, price=? WHERE plant_id=?",
+                plant.getName(), plant.getCategory(), plant.getDescription(), plant.getPrice(), plant.getPlant_id()
         );
     }
 
@@ -41,31 +41,31 @@ public class PlantDataAcessService implements PlantDAO {
     @Override
     public List<Plant> findAll() {
         // Select all data as an sql statement
-        final String sql = "SELECT id, name, category, price, image FROM plant";
+        final String sql = "SELECT plant_id, name, category, description, price FROM plant";
         // Convert query into Java format
         return jdbcTemplate.query(sql, (resultSet, i) -> {
-            UUID id = UUID.fromString(resultSet.getString("id"));
+            UUID plant_id = UUID.fromString(resultSet.getString("plant_id"));
             String name = resultSet.getString("name");
             String category = resultSet.getString("category");
+            String description = resultSet.getString("description");
             double price = resultSet.getDouble("price");
-            String image = resultSet.getString("image");
-            return new Plant(id, name, category, price, image);
+            return new Plant(plant_id, name, category, description, price);
         });
     }
 
     @Override
-    public Optional<Plant> findById(UUID id) {
-        final String sql = "SELECT id, name, category, price, image FROM plant WHERE id = ?";
+    public Optional<Plant> findById(UUID plant_id) {
+        final String sql = "SELECT plant_id, name, category, description, price FROM plant WHERE plant_id = ?";
         Plant plant = jdbcTemplate.queryForObject(
                 sql,
-                new Object[]{id},
+                new Object[]{plant_id},
                 (resultSet, i) -> {
-                    UUID plantId = UUID.fromString(resultSet.getString("id"));
+                    UUID plantId = UUID.fromString(resultSet.getString("plant_id"));
                     String name = resultSet.getString("name");
                     String category = resultSet.getString("category");
+                    String description = resultSet.getString("description");
                     double price = resultSet.getDouble("price");
-                    String image = resultSet.getString("image");
-                    return new Plant(plantId, name, category, price, image);
+                    return new Plant(plantId, name, category, description, price);
                 });
         return Optional.ofNullable(plant);
     }

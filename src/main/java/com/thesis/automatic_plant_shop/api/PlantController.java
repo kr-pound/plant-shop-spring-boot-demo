@@ -24,7 +24,7 @@ public class PlantController {
 
     /**
      * Add a new Plant
-     * @param plant: Json Model (id, name, category, price, image)
+     * @param plant: Json Model (plant_id, name, category, description, price)
      * @return int
      *      1 = success
      */
@@ -38,22 +38,22 @@ public class PlantController {
     /**
      * update a specific plant
      * path --> @param id: UUID of the plant
-     * @param plant: json Model (id, name, category, price, image)
+     * @param plant: json Model (plant_id, name, category, description, price)
      * @return int
      *      1 = success
      *      -1 = failed
      */
-    @PutMapping(path = "{id}")
-    public int updatePlant(@PathVariable("id") UUID id,
+    @PutMapping(path = "{plant_id}")
+    public int updatePlant(@PathVariable("plant_id") UUID plant_id,
                            @RequestBody Plant plant) {
-        Plant _plant = plantService.getPlantById(id).orElse(null);
+        Plant _plant = plantService.getPlantById(plant_id).orElse(null);
 
         if (_plant != null) {
-            _plant.setId(id);
+            _plant.setPlant_id(plant_id);
             _plant.setName(plant.getName());
             _plant.setCategory(plant.getCategory());
+            _plant.setDescription(plant.getDescription());
             _plant.setPrice(plant.getPrice());
-            _plant.setImage(plant.getImage());
             return plantService.updatePlant(_plant);
         } else
             return -1;
@@ -72,12 +72,12 @@ public class PlantController {
 
     /**
      * Get plant by giving an id
-     * @param id: UUID
-     * @return plant: Json Model (id, name, category, price, image)
+     * @param plant_id: UUID
+     * @return plant: Json Model (plant_id, name, category, description, price)
      */
-    @GetMapping(path = "{id}")
-    public Plant getPlantById(@PathVariable("id") UUID id) {
-        return plantService.getPlantById(id).orElse(null);
+    @GetMapping(path = "{plant_id}")
+    public Plant getPlantById(@PathVariable("plant_id") UUID plant_id) {
+        return plantService.getPlantById(plant_id).orElse(null);
     }
 
     /* ================================================================= */

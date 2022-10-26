@@ -7,32 +7,32 @@ import javax.validation.constraints.Positive;
 import java.util.UUID;
 
 public class Plant {
-    private UUID id;
+    private UUID plant_id;
     @NotBlank
     private String name;
     private String category;
+    private String description;
     @Positive
     private double price;
-    private String image;
 
-    public Plant(@JsonProperty("id") UUID id,
+    public Plant(@JsonProperty("plant_id") UUID plant_id,
                  @JsonProperty("name") String name,
                  @JsonProperty("category") String category,
-                 @JsonProperty("price") double price,
-                 @JsonProperty("image") String image) {
-        this.id = id;
+                 @JsonProperty("description") String description,
+                 @JsonProperty("price") double price) {
+        this.plant_id = plant_id;
         this.name = name;
         this.category = category;
+        this.description = description;
         this.price = price;
-        this.image = image;
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getPlant_id() {
+        return plant_id;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setPlant_id(UUID plant_id) {
+        this.plant_id = plant_id;
     }
 
     public String getName() {
@@ -51,6 +51,14 @@ public class Plant {
         this.category = category;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public double getPrice() {
         return price;
     }
@@ -59,11 +67,4 @@ public class Plant {
         this.price = price;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
 }
