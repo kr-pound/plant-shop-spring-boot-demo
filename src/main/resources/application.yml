@@ -3,4 +3,4 @@ app:
     jdbc-url: "jdbc:postgresql://ec2-54-173-237-110.compute-1.amazonaws.com:5432/d4pddh9e4nnng6?password=cb47dffab98dc81cbbb13957f2c8ab12b892c2b60e0f6f9b8f7236103473451e&sslmode=require&user=zdnbviuhzcgdws"
     username: zdnbviuhzcgdws
     password: cb47dffab98dc81cbbb13957f2c8ab12b892c2b60e0f6f9b8f7236103473451e
-    pool-size: 30
+    pool-size: 4

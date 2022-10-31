@@ -24,9 +24,9 @@ public class PlantController {
 
     /**
      * Add a new Plant
-     * @param plant: Json Model (plant_id, name, category, description, price)
+     * @param plant: Json Model (plant_id, name, category, description, price, picture)
      * @return int
-     *      1 = success
+     *      1 = success: Plant & Picture
      */
     @PostMapping
     public int addPlant(@Valid @NotNull @RequestBody Plant plant) {

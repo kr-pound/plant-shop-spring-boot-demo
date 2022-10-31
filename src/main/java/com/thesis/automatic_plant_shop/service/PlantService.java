@@ -16,7 +16,7 @@ public class PlantService {
     private final PlantDAO plantDAO;
 
     @Autowired
-    public PlantService(@Qualifier("postgres") PlantDAO plantDAO) {
+    public PlantService(@Qualifier("postgres_plant") PlantDAO plantDAO) {
         this.plantDAO = plantDAO;
     }
 
