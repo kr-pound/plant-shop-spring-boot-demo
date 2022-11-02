@@ -1,6 +1,7 @@
 package com.thesis.automatic_plant_shop.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import javax.validation.constraints.Positive;
 import java.util.UUID;
 
 public class Plant {
+    @Id
     private UUID plant_id;
     @NotBlank
     private String name;
@@ -16,20 +18,28 @@ public class Plant {
     private String description;
     @Positive
     private double price;
-    private String picture;
+    private Image image;
 
-    public Plant(@JsonProperty("plant_id") UUID plant_id,
-                 @JsonProperty("name") String name,
+    public Plant(@JsonProperty("name") String name,
                  @JsonProperty("category") String category,
                  @JsonProperty("description") String description,
                  @JsonProperty("price") double price,
                  @JsonProperty("picture") String picture) {
+        this.name = name;
+        this.category = category;
+        this.description = description;
+        this.price = price;
+
+        this.plant_id = UUID.randomUUID();
+        this.image = new Image(plant_id, picture);
+    }
+
+    public Plant(UUID plant_id, String name, String category, String description, double price) {
         this.plant_id = plant_id;
         this.name = name;
         this.category = category;
         this.description = description;
         this.price = price;
-        this.picture = picture;
     }
 
     public UUID getPlant_id() {
@@ -72,11 +82,11 @@ public class Plant {
         this.price = price;
     }
 
-    public String getPicture() {
-        return picture;
+    public Image getImage() {
+        return image;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setImage(Image image) {
+        this.image = image;
     }
 }

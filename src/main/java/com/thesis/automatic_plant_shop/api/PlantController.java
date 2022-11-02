@@ -26,10 +26,10 @@ public class PlantController {
      * Add a new Plant
      * @param plant: Json Model (plant_id, name, category, description, price, picture)
      * @return int
-     *      1 = success: Plant & Picture
+     *      1 = success: Plant & Image
      */
     @PostMapping
-    public int addPlant(@Valid @NotNull @RequestBody Plant plant) {
+    public Plant addPlant(@Valid @NotNull @RequestBody Plant plant) {
         return plantService.addPlant(plant);
     }
 
@@ -43,6 +43,7 @@ public class PlantController {
      *      1 = success
      *      -1 = failed
      */
+    /*
     @PutMapping(path = "{plant_id}")
     public int updatePlant(@PathVariable("plant_id") UUID plant_id,
                            @RequestBody Plant plant) {
@@ -57,16 +58,17 @@ public class PlantController {
             return plantService.updatePlant(_plant);
         } else
             return -1;
-    }
+    }*/
 
     /* ================================================================= */
 
     /**
      * Get all plants
-     * @return List<Plant>
+     * @return Iterable<Plant>
      */
+
     @GetMapping
-    public List<Plant> getAllPlant() {
+    public Iterable<Plant> getAllPlant() {
         return plantService.getAllPlant();
     }
 
@@ -75,10 +77,11 @@ public class PlantController {
      * @param plant_id: UUID
      * @return plant: Json Model (plant_id, name, category, description, price)
      */
+    /*
     @GetMapping(path = "{plant_id}")
     public Plant getPlantById(@PathVariable("plant_id") UUID plant_id) {
         return plantService.getPlantById(plant_id).orElse(null);
-    }
+    }*/
 
     /* ================================================================= */
 
@@ -89,7 +92,7 @@ public class PlantController {
      *      4 = deleted success
      */
     @DeleteMapping
-    public int deleteAllPlant() {
-        return plantService.deleteAllPlant();
+    public void deleteAllPlant() {
+        plantService.deleteAllPlant();
     }
 }
