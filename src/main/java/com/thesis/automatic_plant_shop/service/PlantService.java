@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,12 +32,18 @@ public class PlantService {
         return plant;
     }
 
-    /*
     ///////////////////////////////////////////////////////////////////////
 
-    public int updatePlant(Plant plant) {
-        return plantDAO.update(plant);
-    }*/
+    public int updatePlant(UUID plant_id, Plant plant) {
+        deletePlantById(plant_id);
+        plant.setPlant_id(plant_id);
+        // Success
+        if (addPlant(plant) != null)
+            return 1;
+        // Failed
+        else
+            return -1;
+    }
 
     ///////////////////////////////////////////////////////////////////////
 
@@ -53,15 +58,27 @@ public class PlantService {
             }
         }
         return plantIterable;
-    }/*
+    }
     public Optional<Plant> getPlantById(UUID plant_id) {
-        return plantDAO.findById(plant_id);
-    }*/
+        Optional<Image> imageOptional = imageDAO.findById(plant_id);
+        Optional<Plant> plantOptional = plantDAO.findById(plant_id);
+
+        // set image only when plant & image are present
+        if (plantOptional.isPresent() && imageOptional.isPresent()) {
+            if (plantOptional.get().getPlant_id().equals(imageOptional.get().getPlant().getId()))
+                plantOptional.get().setImage(imageOptional.get());
+        }
+        return plantOptional;
+    }
 
     ///////////////////////////////////////////////////////////////////////
 
     public void deleteAllPlant() {
         imageDAO.deleteAll();
         plantDAO.deleteAll();
+    }
+    public void deletePlantById(UUID plant_id) {
+        imageDAO.deleteById(plant_id);
+        plantDAO.deleteById(plant_id);
     }
 }

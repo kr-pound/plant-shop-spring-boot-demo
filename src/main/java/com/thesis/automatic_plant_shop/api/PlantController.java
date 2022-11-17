@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.UUID;
 
 @CrossOrigin
@@ -25,8 +24,7 @@ public class PlantController {
     /**
      * Add a new Plant
      * @param plant: Json Model (plant_id, name, category, description, price, picture)
-     * @return int
-     *      1 = success: Plant & Image
+     * @return Plant (Plant & Image)
      */
     @PostMapping
     public Plant addPlant(@Valid @NotNull @RequestBody Plant plant) {
@@ -43,56 +41,31 @@ public class PlantController {
      *      1 = success
      *      -1 = failed
      */
-    /*
     @PutMapping(path = "{plant_id}")
     public int updatePlant(@PathVariable("plant_id") UUID plant_id,
                            @RequestBody Plant plant) {
-        Plant _plant = plantService.getPlantById(plant_id).orElse(null);
-
-        if (_plant != null) {
-            _plant.setPlant_id(plant_id);
-            _plant.setName(plant.getName());
-            _plant.setCategory(plant.getCategory());
-            _plant.setDescription(plant.getDescription());
-            _plant.setPrice(plant.getPrice());
-            return plantService.updatePlant(_plant);
-        } else
-            return -1;
-    }*/
+        return plantService.updatePlant(plant_id, plant);
+    }
 
     /* ================================================================= */
-
-    /**
-     * Get all plants
-     * @return Iterable<Plant>
-     */
 
     @GetMapping
     public Iterable<Plant> getAllPlant() {
         return plantService.getAllPlant();
     }
-
-    /**
-     * Get plant by giving an id
-     * @param plant_id: UUID
-     * @return plant: Json Model (plant_id, name, category, description, price)
-     */
-    /*
     @GetMapping(path = "{plant_id}")
     public Plant getPlantById(@PathVariable("plant_id") UUID plant_id) {
         return plantService.getPlantById(plant_id).orElse(null);
-    }*/
+    }
 
     /* ================================================================= */
 
-    /**
-     * Delete all plants
-     * @return int
-     *      0 = there are no item to delete
-     *      4 = deleted success
-     */
     @DeleteMapping
     public void deleteAllPlant() {
         plantService.deleteAllPlant();
+    }
+    @DeleteMapping(path = "{plant_id}")
+    public void deletePlantById(@PathVariable("plant_id") UUID plant_id) {
+        plantService.deletePlantById(plant_id);
     }
 }

@@ -1,9 +1,7 @@
 package com.thesis.automatic_plant_shop.dao;
 
 import com.thesis.automatic_plant_shop.model.Image;
-import com.thesis.automatic_plant_shop.model.Plant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -40,12 +38,28 @@ public class ImageDataAccessService implements ImageDAO {
 
     @Override
     public Optional<Image> findById(UUID uuid) {
-        return Optional.empty();
+        // check if uuid can not be found
+        if (!existsById(uuid))
+            return Optional.empty();
+
+        final String sql = "SELECT plant, picture FROM image WHERE plant = ?";
+        Image image = jdbcTemplate.queryForObject(
+                sql,
+                new Object[]{uuid},
+                (resultSet, i) -> {
+                    UUID plant = UUID.fromString(resultSet.getString("plant"));
+                    String picture = resultSet.getString("picture");
+
+                    return new Image(plant, picture);
+                });
+        return Optional.ofNullable(image);
     }
 
     @Override
     public boolean existsById(UUID uuid) {
-        return false;
+        String sql = "SELECT count(*) FROM image WHERE plant = ?";
+        int count = jdbcTemplate.queryForObject(sql, new Object[] { uuid }, Integer.class);
+        return count > 0;
     }
 
     @Override
@@ -75,7 +89,10 @@ public class ImageDataAccessService implements ImageDAO {
 
     @Override
     public void deleteById(UUID uuid) {
-
+        // check if uuid exist
+        if (existsById(uuid))
+            jdbcTemplate.update("DELETE from image WHERE plant = ?",
+                    new Object[] { uuid });
     }
 
     @Override
