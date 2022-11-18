@@ -3,5 +3,9 @@ CREATE TABLE plant (
     name VARCHAR NOT NULL,
     category VARCHAR NOT NULL,
     description TEXT,
-    price FLOAT NOT NULL
+    price FLOAT NOT NULL,
+    status VARCHAR NOT NULL,
+    slot UUID NOT NULL,
+
+    FOREIGN KEY (slot) REFERENCES slot(slot_id)
 )
