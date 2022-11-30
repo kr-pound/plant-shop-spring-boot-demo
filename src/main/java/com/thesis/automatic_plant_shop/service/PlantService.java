@@ -2,8 +2,10 @@ package com.thesis.automatic_plant_shop.service;
 
 import com.thesis.automatic_plant_shop.dao.ImageDAO;
 import com.thesis.automatic_plant_shop.dao.PlantDAO;
+import com.thesis.automatic_plant_shop.dao.SlotDAO;
 import com.thesis.automatic_plant_shop.model.Image;
 import com.thesis.automatic_plant_shop.model.Plant;
+import com.thesis.automatic_plant_shop.model.Slot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
@@ -13,19 +15,40 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class PlantService {
+public class PlantService extends SlotService {
 
     private final PlantDAO plantDAO;
     private final ImageDAO imageDAO;
 
     @Autowired
     public PlantService(@Qualifier("postgres_plant") PlantDAO plantDAO,
-                        @Qualifier("postgres_image") ImageDAO imageDAO) {
+                        @Qualifier("postgres_image") ImageDAO imageDAO,
+                        @Qualifier("postgres_slot") SlotDAO slotDAO) {
+        super(slotDAO);
         this.plantDAO = plantDAO;
         this.imageDAO = imageDAO;
     }
 
     public Plant addPlant(Plant plant) {
+        // Find available Slot
+        UUID available_slot = null;
+        for (Slot slot : getAllSlot()) {
+            // If slot available -> the slot's availability become false
+            if (slot.isAvailability()) {
+                available_slot = slot.getSlot_id();
+                slot.setAvailability(false);
+                updateSlot(available_slot, slot);
+                break;
+            }
+        }
+        // No Slot Available --> return with "No Slot Available" Name
+        if (available_slot == null)
+            return new Plant(plant.getPlant_id(), "No Slot Available", "-", null, 1,
+                    "-", UUID.randomUUID());
+
+        // Assign Slot to the Plant
+        plant.setSlot(AggregateReference.to(available_slot));
+
         // Reference from Image to Plant
         AggregateReference<Plant, UUID> reference = AggregateReference.to(plantDAO.save(plant).getPlant_id());
         imageDAO.save(new Image(reference, plant.getImage().getPicture()));
@@ -35,6 +58,7 @@ public class PlantService {
     ///////////////////////////////////////////////////////////////////////
 
     public int updatePlant(UUID plant_id, Plant plant) {
+        // Update Plant
         deletePlantById(plant_id);
         plant.setPlant_id(plant_id);
         // Success
@@ -76,9 +100,29 @@ public class PlantService {
     public void deleteAllPlant() {
         imageDAO.deleteAll();
         plantDAO.deleteAll();
+
+        // Update Slot
+        getAllSlot().forEach(slot -> {
+            slot.setAvailability(true);
+            updateSlot(slot.getSlot_id(), slot);
+        });
     }
     public void deletePlantById(UUID plant_id) {
+        // Check plant
+        if (!plantDAO.findById(plant_id).isPresent())
+            return;
+        Plant plant = plantDAO.findById(plant_id).get();
+
+        // Check slot
+        if (!getSlotById(plant.getSlot().getId()).isPresent())
+            return;
+        Slot slot = getSlotById(plant.getSlot().getId()).get();
+
         imageDAO.deleteById(plant_id);
         plantDAO.deleteById(plant_id);
+
+        // Update Slot
+        slot.setAvailability(true);
+        updateSlot(slot.getSlot_id(), slot);
     }
 }

@@ -21,8 +21,9 @@ public class PlantDataAccessService implements PlantDAO {
     @Override
     public <S extends Plant> S save(S entity) {
         int status = jdbcTemplate.update(
-                "INSERT INTO plant (plant_id, name, category, description, price) VALUES(?,?,?,?,?)",
-                entity.getPlant_id(), entity.getName(), entity.getCategory(), entity.getDescription(), entity.getPrice());
+                "INSERT INTO plant (plant_id, name, category, description, price, status, slot) VALUES(?,?,?,?,?,?,?)",
+                entity.getPlant_id(), entity.getName(), entity.getCategory(), entity.getDescription(),
+                entity.getPrice(), entity.getStatus(), entity.getSlot().getId());
         // Success
         if (status == 1)
             return entity;
@@ -42,7 +43,8 @@ public class PlantDataAccessService implements PlantDAO {
         if (!existsById(uuid))
             return Optional.empty();
 
-        final String sql = "SELECT plant_id, name, category, description, price FROM plant WHERE plant_id = ?";
+        final String sql = "SELECT plant_id, name, category, description, price, status, slot " +
+                "FROM plant WHERE plant_id = ?";
         Plant plant = jdbcTemplate.queryForObject(
                 sql,
                 new Object[]{uuid},
@@ -52,8 +54,10 @@ public class PlantDataAccessService implements PlantDAO {
                     String category = resultSet.getString("category");
                     String description = resultSet.getString("description");
                     double price = resultSet.getDouble("price");
+                    String status = resultSet.getString("status");
+                    UUID slot = UUID.fromString(resultSet.getString("slot"));
 
-                    return new Plant(plantId, name, category, description, price);
+                    return new Plant(plantId, name, category, description, price, status, slot);
                 });
         return Optional.ofNullable(plant);
     }
@@ -77,8 +81,10 @@ public class PlantDataAccessService implements PlantDAO {
             String category = resultSet.getString("category");
             String description = resultSet.getString("description");
             double price = resultSet.getDouble("price");
+            String status = resultSet.getString("status");
+            UUID slot = UUID.fromString(resultSet.getString("slot"));
 
-            return new Plant(plant_id, name, category, description, price);
+            return new Plant(plant_id, name, category, description, price, status, slot);
         });
         return plant_query;
     }

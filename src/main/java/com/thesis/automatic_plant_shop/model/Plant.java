@@ -2,6 +2,7 @@ package com.thesis.automatic_plant_shop.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.jdbc.core.mapping.AggregateReference;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -18,6 +19,9 @@ public class Plant {
     private String description;
     @Positive
     private double price;
+    private String status;
+    private AggregateReference<Slot, UUID> slot;
+
     private Image image;
 
     public Plant(@JsonProperty("name") String name,
@@ -25,21 +29,26 @@ public class Plant {
                  @JsonProperty("description") String description,
                  @JsonProperty("price") double price,
                  @JsonProperty("picture") String picture) {
+        this.plant_id = UUID.randomUUID();
         this.name = name;
         this.category = category;
         this.description = description;
         this.price = price;
+        this.status = "OK";
 
-        this.plant_id = UUID.randomUUID();
         this.image = new Image(plant_id, picture);
     }
 
-    public Plant(UUID plant_id, String name, String category, String description, double price) {
+    public Plant(UUID plant_id, String name, String category, String description, double price,
+                 String status, UUID slot_id) {
         this.plant_id = plant_id;
         this.name = name;
         this.category = category;
         this.description = description;
         this.price = price;
+        this.status = status;
+
+        this.slot = AggregateReference.to(slot_id);
     }
 
     public UUID getPlant_id() {
@@ -88,5 +97,21 @@ public class Plant {
 
     public void setImage(Image image) {
         this.image = image;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public AggregateReference<Slot, UUID> getSlot() {
+        return slot;
+    }
+
+    public void setSlot(AggregateReference<Slot, UUID> slot) {
+        this.slot = slot;
     }
 }
