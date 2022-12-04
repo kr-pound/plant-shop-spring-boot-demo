@@ -11,17 +11,9 @@ public class Image {
     private AggregateReference<Plant, UUID> plant;
     private String picture;
 
-    // Pass as plant_id
     public Image(@JsonProperty("plant") UUID plant_id,
                  @JsonProperty("picture") String picture) {
         this.plant = AggregateReference.to(plant_id);
-        this.picture = picture;
-    }
-
-    // Pass as Plant Reference
-    public Image(AggregateReference<Plant, UUID> plant,
-                 String picture) {
-        this.plant = plant;
         this.picture = picture;
     }
 

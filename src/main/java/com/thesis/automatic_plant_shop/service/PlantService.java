@@ -50,8 +50,7 @@ public class PlantService extends SlotService {
         plant.setSlot(AggregateReference.to(available_slot));
 
         // Reference from Image to Plant
-        AggregateReference<Plant, UUID> reference = AggregateReference.to(plantDAO.save(plant).getPlant_id());
-        imageDAO.save(new Image(reference, plant.getImage().getPicture()));
+        imageDAO.save(new Image(plantDAO.save(plant).getPlant_id(), plant.getImage().getPicture()));
         return plant;
     }
 
