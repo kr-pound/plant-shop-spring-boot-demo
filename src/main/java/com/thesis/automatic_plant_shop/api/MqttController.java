@@ -1,5 +1,7 @@
 package com.thesis.automatic_plant_shop.api;
 
+import com.thesis.automatic_plant_shop.model.ConfirmStatement;
+import com.thesis.automatic_plant_shop.model.Statement;
 import com.thesis.automatic_plant_shop.service.MqttPubSubService;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ public class MqttController {
      * @throws MqttException: error case
      */
     @PostMapping("/statement_confirm")
-    public String statementConfirm(@RequestBody String payload) throws MqttException {
+    public String statementConfirm(@RequestBody ConfirmStatement payload) throws MqttException {
         service.publishMessage(payload, "statement_confirm");
         return "Statement ID Published Successfully";
     }

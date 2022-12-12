@@ -2,6 +2,8 @@ package com.thesis.automatic_plant_shop.service;
 
 import com.thesis.automatic_plant_shop.PayloadHelper;
 import com.thesis.automatic_plant_shop.datasource.MqttConfig;
+import com.thesis.automatic_plant_shop.model.ConfirmStatement;
+import com.thesis.automatic_plant_shop.model.Statement;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,11 @@ public class MqttPubSubService {
     private MqttConfig mqttConfig;
     private IMqttClient client;
 
-    public void publishMessage(String payload, String publish_topic) throws MqttException {
+    private StatementService statementService;
+
+    public void publishMessage(ConfirmStatement payload, String publish_topic) throws MqttException {
+        //statementService.getStatementById()
+
         this.client = mqttConfig.connectToBroker();
 
         // Payload Helper (Callable)

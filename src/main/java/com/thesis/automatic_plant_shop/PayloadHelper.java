@@ -1,5 +1,7 @@
 package com.thesis.automatic_plant_shop;
 
+import com.thesis.automatic_plant_shop.model.ConfirmStatement;
+import com.thesis.automatic_plant_shop.model.Statement;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
 
 import java.util.concurrent.Callable;
@@ -10,10 +12,10 @@ public class PayloadHelper implements Callable<String> {
     private final String publishTopic;
     private final String publishMessage;
 
-    public PayloadHelper(IMqttClient client, String publishTopic, String publishMessage) {
+    public PayloadHelper(IMqttClient client, String publishTopic, ConfirmStatement publishMessage) {
         this.client = client;
         this.publishTopic = publishTopic;
-        this.publishMessage = publishMessage;
+        this.publishMessage = publishMessage.getStatement_id().toString();
     }
 
     @Override
