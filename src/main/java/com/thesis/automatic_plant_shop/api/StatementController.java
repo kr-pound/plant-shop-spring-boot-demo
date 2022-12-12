@@ -24,6 +24,7 @@ public class StatementController {
 
     /**
      * Add a new Statement
+     * @param statement: Json Model (plant) <-- provide plant_id
      * @return Statement
      */
     @PostMapping

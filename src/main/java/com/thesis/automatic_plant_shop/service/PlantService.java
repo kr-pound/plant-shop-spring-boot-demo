@@ -43,8 +43,8 @@ public class PlantService extends SlotService {
         }
         // No Slot Available --> return with "No Slot Available" Name
         if (available_slot == null)
-            return new Plant(plant.getPlant_id(), "No Slot Available", "-", null, 1,
-                    "-", UUID.randomUUID());
+            return new Plant(plant.getPlant_id(), plant.getName(), plant.getCategory(), plant.getDescription(),
+                    plant.getPrice(), "No Slot Available", UUID.randomUUID());
 
         // Assign Slot to the Plant
         plant.setSlot(AggregateReference.to(available_slot));

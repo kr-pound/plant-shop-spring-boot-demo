@@ -1,6 +1,6 @@
 package com.thesis.automatic_plant_shop.datasource;
 
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -18,21 +18,41 @@ import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Configuration
-public class MqttBeans {
+public class MqttConfig {
+
+    //private final String mqtt_url = "tcp://localhost:1883";
+    private final String mqtt_url = "tcp://192.168.103.188:1883";
+    //private final String mqtt_url = "tcp://projecttech.thddns.net:5050";
+    private final String publisherId = UUID.randomUUID().toString();
+
+    private final String subTopic = "test";
+
+    public IMqttClient connectToBroker() throws MqttException {
+        IMqttClient publisher = new MqttClient(mqtt_url, publisherId);
+
+        MqttConnectOptions options = new MqttConnectOptions();
+        options.setAutomaticReconnect(true);
+        options.setCleanSession(true);
+        options.setConnectionTimeout(10);
+        publisher.connect(options);
+        System.out.println("Connection successfully established");
+        return publisher;
+    }
+
+    //////////////////////////////////////////////////////////
 
     public MqttPahoClientFactory mqttClientFactory() {
         DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
         MqttConnectOptions options = new MqttConnectOptions();
 
-        options.setServerURIs(new String[] { "tcp://localhost:1883" });
+        options.setServerURIs(new String[] { mqtt_url });
         options.setCleanSession(true);
         factory.setConnectionOptions(options);
         return factory;
     }
-
-    //////////////////////////////////////////////////////////
 
     // Receive Message
     @Bean
@@ -42,8 +62,7 @@ public class MqttBeans {
     @Bean
     public MessageProducer inbound() {
         MqttPahoMessageDrivenChannelAdapter adapter =
-                new MqttPahoMessageDrivenChannelAdapter("tcp://localhost:1883", "server-client",
-                        "test");
+                new MqttPahoMessageDrivenChannelAdapter(mqtt_url, MqttAsyncClient.generateClientId(), subTopic);
         adapter.setCompletionTimeout(5000);
         adapter.setConverter(new DefaultPahoMessageConverter());
         adapter.setQos(2);
@@ -57,7 +76,7 @@ public class MqttBeans {
             @Override
             public void handleMessage(Message<?> message) throws MessagingException {
                 String topic = Objects.requireNonNull(message.getHeaders().get(MqttHeaders.RECEIVED_TOPIC)).toString();
-                if (topic.equals("test")) {
+                if (topic.equals(subTopic)) {
                     System.out.println("This is our topic");
                 }
                 System.out.println(message.getPayload());
@@ -75,7 +94,7 @@ public class MqttBeans {
     @ServiceActivator(inputChannel = "mqttOutboundChannel")
     public MessageHandler mqttOutbound() {
         MqttPahoMessageHandler messageHandler =
-                new MqttPahoMessageHandler("server-client", mqttClientFactory());
+                new MqttPahoMessageHandler(MqttAsyncClient.generateClientId(), mqttClientFactory());
         messageHandler.setAsync(true);
         messageHandler.setDefaultTopic("#");
         return messageHandler;
