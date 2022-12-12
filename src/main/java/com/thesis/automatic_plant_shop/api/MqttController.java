@@ -3,13 +3,11 @@ package com.thesis.automatic_plant_shop.api;
 import com.thesis.automatic_plant_shop.service.MqttPubSubService;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
-@RequestMapping
+@RequestMapping("api/v1")
 public class MqttController {
 
     @Autowired
@@ -26,5 +24,4 @@ public class MqttController {
         service.publishMessage(payload, "statement_confirm");
         return "Statement ID Published Successfully";
     }
-
 }

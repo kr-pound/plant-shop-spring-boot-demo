@@ -24,8 +24,7 @@ import java.util.UUID;
 public class MqttConfig {
 
     //private final String mqtt_url = "tcp://localhost:1883";
-    private final String mqtt_url = "tcp://192.168.103.188:1883";
-    //private final String mqtt_url = "tcp://projecttech.thddns.net:5050";
+    private final String mqtt_url = "tcp://projecttech.thddns.net:5052";
     private final String publisherId = UUID.randomUUID().toString();
 
     private final String subTopic = "test";
