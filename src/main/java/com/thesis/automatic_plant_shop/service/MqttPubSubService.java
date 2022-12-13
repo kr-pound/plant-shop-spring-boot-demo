@@ -41,6 +41,7 @@ public class MqttPubSubService extends StatementService {
     }
 
     // Publish Slot
+    /*
     public void publishMessage(ConfirmSlot payload, String publish_topic) throws MqttException {
         this.client = mqttConfig.connectToBroker();
 
@@ -51,15 +52,16 @@ public class MqttPubSubService extends StatementService {
 
         //shut down the executor service now
         executor.shutdown();
-    }
+    }*/
 
-    // Publish Statement
-    public void publishMessage(ConfirmStatement payload, String publish_topic) throws MqttException {
+    // Publish Statement and Slot
+    public void publishMessage(ConfirmStatement statementPayload, String publish_topic,
+                               ConfirmSlot slotPayload, String publish_topic2) throws MqttException {
         this.client = mqttConfig.connectToBroker();
 
         // Payload Helper (Callable)
         ExecutorService executor = Executors.newFixedThreadPool(1);
-        Callable<String> callable = new PayloadHelper(client, publish_topic, payload);
+        Callable<String> callable = new PayloadHelper(client, publish_topic, statementPayload, publish_topic2, slotPayload);
         executor.submit(callable);
 
         //shut down the executor service now

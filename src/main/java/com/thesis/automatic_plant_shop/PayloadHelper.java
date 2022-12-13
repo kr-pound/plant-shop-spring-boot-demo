@@ -10,20 +10,26 @@ public class PayloadHelper implements Callable<String> {
 
     IMqttClient client;
     private final String publishTopic;
-    private final String publishMessage;
+    private final String publishTopic2;
+    private final String publishStatement;
+    private final String publishSlot;
 
     // Publish Slot
+    /*
     public PayloadHelper(IMqttClient client, String publishTopic, ConfirmSlot publishMessage) {
         this.client = client;
         this.publishTopic = publishTopic;
         this.publishMessage = publishMessage.getSlot_id().toString();
-    }
+    }*/
 
-    // Publish Statement
-    public PayloadHelper(IMqttClient client, String publishTopic, ConfirmStatement publishMessage) {
+    // Publish Statement and Slot
+    public PayloadHelper(IMqttClient client, String publishTopic, ConfirmStatement publishStatement,
+                         String publishTopic2, ConfirmSlot publishSlot) {
         this.client = client;
         this.publishTopic = publishTopic;
-        this.publishMessage = publishMessage.getStatement_id().toString();
+        this.publishTopic2 = publishTopic2;
+        this.publishStatement = publishStatement.getStatement_id().toString();
+        this.publishSlot = publishSlot.getSlot_id().toString();
     }
 
     @Override
@@ -32,12 +38,14 @@ public class PayloadHelper implements Callable<String> {
             System.out.println("Publish Failed");
             return null;
         }
-        byte[] msg = productPaymentNotify();
-        client.publish(publishTopic, msg, 0, false);
-        return publishMessage;
+        byte[] msg1 = publishStatement.getBytes();
+        byte[] msg2 = publishSlot.getBytes();
+        client.publish(publishTopic, msg1, 0, false);
+        client.publish(publishTopic2, msg2, 0, false);
+        return publishStatement;
     }
 
     private byte[] productPaymentNotify() {
-        return publishMessage.getBytes();
+        return publishStatement.getBytes();
     }
 }

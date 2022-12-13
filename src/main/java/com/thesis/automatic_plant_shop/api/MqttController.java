@@ -62,13 +62,13 @@ public class MqttController {
         // Confirm Statement
         if (service.updateStatementStatus(payload.getStatement_id(), "Purchased") == -1)
             return "No Statement Exist";
-        service.publishMessage(payload, STATEMENT_TOPIC);
+        service.publishMessage(payload, STATEMENT_TOPIC, new ConfirmSlot(plant.getSlot().getId()), SLOT_TOPIC);
 
         /////////////////////////////////////////////
 
         // Request Door to Open
         System.out.println(plant.getSlot().getId());
-        service.publishMessage(new ConfirmSlot(plant.getSlot().getId()), SLOT_TOPIC);
+        //service.publishMessage(new ConfirmSlot(plant.getSlot().getId()), SLOT_TOPIC);
 
         return "Statement and Slot Published Successfully";
     }
