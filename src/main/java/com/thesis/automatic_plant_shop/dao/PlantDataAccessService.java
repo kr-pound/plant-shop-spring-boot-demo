@@ -65,7 +65,11 @@ public class PlantDataAccessService implements PlantDAO {
                     String description = resultSet.getString("description");
                     double price = resultSet.getDouble("price");
                     String status = resultSet.getString("status");
-                    UUID slot = UUID.fromString(resultSet.getString("slot"));
+                    UUID slot;
+                    if (resultSet.getString("slot") == null)
+                        slot = null;
+                    else
+                        slot = UUID.fromString(resultSet.getString("slot"));
 
                     return new Plant(plantId, name, category, description, price, status, slot);
                 });

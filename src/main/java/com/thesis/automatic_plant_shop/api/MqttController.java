@@ -13,7 +13,6 @@ public class MqttController {
 
     @Autowired
     MqttPubSubService service;
-
     /**
      *
      * @param payload: json String ("statement_id")
