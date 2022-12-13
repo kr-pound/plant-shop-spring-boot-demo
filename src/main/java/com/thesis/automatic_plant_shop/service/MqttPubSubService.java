@@ -40,6 +40,20 @@ public class MqttPubSubService extends StatementService {
         this.slotDAO = slotDAO;
     }
 
+    // Publish Slot
+    public void publishMessage(ConfirmSlot payload, String publish_topic) throws MqttException {
+        this.client = mqttConfig.connectToBroker();
+
+        // Payload Helper (Callable)
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        Callable<String> callable = new PayloadHelper(client, publish_topic, payload);
+        executor.submit(callable);
+
+        //shut down the executor service now
+        executor.shutdown();
+    }
+
+    // Publish Statement
     public void publishMessage(ConfirmStatement payload, String publish_topic) throws MqttException {
         this.client = mqttConfig.connectToBroker();
 
