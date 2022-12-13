@@ -19,8 +19,12 @@ public class StatementService {
         this.statementDAO = statementDAO;
     }
 
+    public Statement addStatement(UUID plant_id) {
+        return statementDAO.save(new Statement(plant_id));
+    }
     public Statement addStatement(Statement statement) {
-        return statementDAO.save(new Statement(statement.getPlant().getId()));
+        return statementDAO.save(new Statement(statement.getStatement_id(), statement.getDate(), statement.getTime(),
+                                statement.getStatus(), statement.getPlant().getId()));
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -30,6 +34,32 @@ public class StatementService {
     }
     public Optional<Statement> getStatementById(UUID statement_id) {
         return statementDAO.findById(statement_id);
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+
+    public int updateStatus(UUID statement_id, String status) {
+
+        // Get Statement if Present
+        Statement statement;
+        Optional<Statement> statementOptional = getStatementById(statement_id);
+        if (statementOptional.isPresent()) {
+            statement = statementOptional.get();
+        } else {
+            return -1;
+        }
+
+        // Set Status
+        statement.setStatus(status);
+
+        // Update
+        deleteStatementById(statement_id);
+        // Success
+        if (addStatement(statement) != null)
+            return 1;
+        // Failed
+        else
+            return -1;
     }
 
     ///////////////////////////////////////////////////////////////////////

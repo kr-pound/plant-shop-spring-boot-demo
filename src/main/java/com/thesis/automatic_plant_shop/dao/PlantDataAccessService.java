@@ -1,7 +1,9 @@
 package com.thesis.automatic_plant_shop.dao;
 
 import com.thesis.automatic_plant_shop.model.Plant;
+import com.thesis.automatic_plant_shop.model.Slot;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -20,10 +22,18 @@ public class PlantDataAccessService implements PlantDAO {
 
     @Override
     public <S extends Plant> S save(S entity) {
+        // Get Slot ID
+        UUID slot_id;
+        AggregateReference<Slot, UUID> slot_reference = entity.getSlot();
+        if (slot_reference != null)
+            slot_id = slot_reference.getId();
+        else
+            slot_id = null;
+
         int status = jdbcTemplate.update(
                 "INSERT INTO plant (plant_id, name, category, description, price, status, slot) VALUES(?,?,?,?,?,?,?)",
                 entity.getPlant_id(), entity.getName(), entity.getCategory(), entity.getDescription(),
-                entity.getPrice(), entity.getStatus(), entity.getSlot().getId());
+                entity.getPrice(), entity.getStatus(), slot_id);
         // Success
         if (status == 1)
             return entity;
@@ -82,7 +92,11 @@ public class PlantDataAccessService implements PlantDAO {
             String description = resultSet.getString("description");
             double price = resultSet.getDouble("price");
             String status = resultSet.getString("status");
-            UUID slot = UUID.fromString(resultSet.getString("slot"));
+            UUID slot;
+            if (resultSet.getString("slot") == null)
+                slot = null;
+            else
+                slot = UUID.fromString(resultSet.getString("slot"));
 
             return new Plant(plant_id, name, category, description, price, status, slot);
         });

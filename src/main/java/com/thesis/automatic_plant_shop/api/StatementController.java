@@ -1,6 +1,5 @@
 package com.thesis.automatic_plant_shop.api;
 
-import com.thesis.automatic_plant_shop.model.Slot;
 import com.thesis.automatic_plant_shop.model.Statement;
 import com.thesis.automatic_plant_shop.service.StatementService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ public class StatementController {
      */
     @PostMapping
     public Statement addStatement(@Valid @NotNull @RequestBody Statement statement) {
-        return statementService.addStatement(statement);
+        return statementService.addStatement(statement.getPlant().getId());
     }
 
     /* ================================================================= */

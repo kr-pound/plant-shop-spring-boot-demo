@@ -1,7 +1,6 @@
 package com.thesis.automatic_plant_shop.api;
 
 import com.thesis.automatic_plant_shop.model.ConfirmStatement;
-import com.thesis.automatic_plant_shop.model.Statement;
 import com.thesis.automatic_plant_shop.service.MqttPubSubService;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +22,8 @@ public class MqttController {
      */
     @PostMapping("/statement_confirm")
     public String statementConfirm(@RequestBody ConfirmStatement payload) throws MqttException {
+        if (service.updateStatementStatus(payload.getStatement_id(), "Purchased") == -1)
+            return "No Statement Exist";
         service.publishMessage(payload, "statement_confirm");
         return "Statement ID Published Successfully";
     }

@@ -48,7 +48,10 @@ public class Plant {
         this.price = price;
         this.status = status;
 
-        this.slot = AggregateReference.to(slot_id);
+        if (slot_id == null)
+            this.slot = null;
+        else
+            this.slot = AggregateReference.to(slot_id);
     }
 
     public UUID getPlant_id() {
