@@ -40,8 +40,8 @@ public class PayloadHelper implements Callable<String> {
         }
         byte[] msg1 = publishStatement.getBytes();
         byte[] msg2 = publishSlot.getBytes();
-        client.publish(publishTopic, msg1, 0, false);
-        client.publish(publishTopic2, msg2, 0, false);
+        client.publish(publishTopic, msg1, 1, false);
+        client.publish(publishTopic2, msg2, 1, false);
         return publishStatement + publishSlot;
     }
 
