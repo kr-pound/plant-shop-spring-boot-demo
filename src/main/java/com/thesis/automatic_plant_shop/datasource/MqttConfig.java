@@ -43,6 +43,7 @@ public class MqttConfig {
 
     //////////////////////////////////////////////////////////
 
+    /*
     public MqttPahoClientFactory mqttClientFactory() {
         DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
         MqttConnectOptions options = new MqttConnectOptions();
@@ -97,5 +98,5 @@ public class MqttConfig {
         messageHandler.setAsync(true);
         messageHandler.setDefaultTopic("#");
         return messageHandler;
-    }
+    }*/
 }
