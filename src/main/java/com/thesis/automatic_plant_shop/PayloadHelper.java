@@ -42,7 +42,7 @@ public class PayloadHelper implements Callable<String> {
         byte[] msg2 = publishSlot.getBytes();
         client.publish(publishTopic, msg1, 0, false);
         client.publish(publishTopic2, msg2, 0, false);
-        return publishStatement;
+        return publishStatement + publishSlot;
     }
 
     private byte[] productPaymentNotify() {
