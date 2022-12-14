@@ -62,7 +62,14 @@ public class MqttController {
         // Confirm Statement
         if (service.updateStatementStatus(payload.getStatement_id(), "Purchased") == -1)
             return "No Statement Exist";
-        service.publishMessage(payload, STATEMENT_TOPIC, new ConfirmSlot(plant.getSlot().getId()), SLOT_TOPIC);
+        try {
+            service.publishMessage(payload, STATEMENT_TOPIC, new ConfirmSlot(plant.getSlot().getId()), SLOT_TOPIC);
+        } catch (MqttException e) {
+            // Catch Error and resend it
+            System.out.println(e.toString());
+            service.publishMessage(payload, STATEMENT_TOPIC, new ConfirmSlot(plant.getSlot().getId()), SLOT_TOPIC);
+        }
+
 
         /////////////////////////////////////////////
 
